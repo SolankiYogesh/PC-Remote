@@ -1,117 +1,161 @@
-# Mac Remote Control - Mobile App
+# Mac Remote Control - React Native App
 
-> **Your Laziness, Now Mobile** 📱
+A beautiful, production-ready React Native mobile app for remotely controlling your Mac system. Features real-time system monitoring, volume/brightness controls, and system actions with a modern dark theme design.
 
-A beautiful React Native mobile app that turns your phone into the ultimate remote control for your Mac. Perfect for those moments when getting up feels like too much work.
+## Features
 
-## Why This Exists
+- **Real-time System Monitoring**: Battery, CPU, and memory usage with live graphs
+- **Volume & Brightness Controls**: Slider-based controls with debounced API calls
+- **System Actions**: Sleep, restart, and shutdown with confirmation dialogs
+- **IP Scanner**: QR code scanning for automatic server IP detection
+- **Dark Theme**: Modern glassmorphism design with smooth animations
+- **Offline Support**: Automatic reconnection and error handling
+- **Cross-platform**: Works on both iOS and Android
 
-Because reaching for your Mac to adjust volume, change brightness, or put it to sleep interrupts your comfortable Netflix, Jio Hotstar, or YouTube binge. This app lets you control everything from your phone while staying perfectly lazy.
+## IP Scanner Feature
 
-## Features That Keep You Lazy
+The app includes an automatic IP scanner that helps you connect to your Mac server:
 
-### 🎚️ One-Handed Volume Control
+### How it works:
 
-- Smooth sliders for precise volume adjustment
-- Perfect for loud commercials or quiet scenes
-- No need to pause your show
+1. **Automatic Detection**: On first launch, the app automatically opens the scanner
+2. **QR Code Scanning**: Scan a QR code containing your Mac's IP address
+3. **Manual Entry**: Option to manually enter the IP address
+4. **Persistent Storage**: IP addresses are stored locally and automatically used on app restart
+5. **Error Recovery**: If server connection fails, the scanner reopens automatically
 
-### 💡 Brightness at Your Fingertips
+### QR Code Format
 
-- Adjust screen brightness without leaving your spot
-- Great for changing room lighting conditions
-- Keep your viewing experience comfortable
+The scanner expects QR codes containing IP addresses in the format:
 
-### 📊 Real-Time System Monitoring
+- Plain IP address: `192.168.1.100`
+- Or full URL: `http://192.168.1.100:5001`
 
-- Battery status so you know when to plug in
-- CPU and memory usage for performance geeks
-- All the info you need without interrupting your flow
+### Server QR Code Generation
 
-### ⚡ Quick Actions
+To generate a QR code for your Mac server, you can use the included server script or any QR code generator with your Mac's IP address.
 
-- **Sleep** - Put your Mac to bed from your bed
-- **Restart** - Quick system refresh when needed
-- **Shutdown** - Power down without moving
+## Installation & Setup
 
-### 🎨 Beautiful Dark Theme
+### Prerequisites
 
-- Optimized for low-light viewing
-- Easy on the eyes during movie nights
-- Professional design that just works
+- Node.js 16+ and bun package manager
+- React Native development environment
+- iOS Simulator (for iOS) or Android Studio (for Android)
+- Mac server running on port 5001
 
-## Perfect For
+### Quick Start
 
-- 🛋️ **Couch potatoes** - Control everything without standing up
-- 🎬 **Movie nights** - Be the remote master from your seat
-- 🎵 **Music sessions** - Fine-tune volume from anywhere
-- 💻 **Work from bed** - All the controls you need
-- 🎮 **Gaming setups** - Quick adjustments between matches
+1. **Install dependencies:**
 
-## Quick Start
+   ```bash
+   cd MacRemoteReactNative
+   bun install
+   ```
 
-```bash
-# Install dependencies
-bun install
+2. **Start the development server:**
 
-# Start development server
-bun start
+   ```bash
+   bun start
+   ```
 
-# Run on iOS
-bun ios
+3. **Run on device/simulator:**
 
-# Run on Android
-bun android
+   ```bash
+   # Android
+   bun android
+
+   # iOS
+   bun ios
+   ```
+
+### Server Setup
+
+Make sure your Mac server is running on port 5001. The app will automatically detect the server IP via QR code scanning or manual entry.
+
+## Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── StatusBadge.tsx     # Connection status indicator
+│   ├── SystemOverview.tsx  # System info display
+│   ├── ControlsPanel.tsx   # Volume/brightness/actions
+│   ├── OfflineState.tsx    # Offline/error state
+│   ├── ServerSettings.tsx  # Server configuration
+│   └── IpScanner.tsx       # QR code IP scanner
+├── hooks/               # Custom React hooks
+│   └── useApi.ts           # API data fetching hooks
+├── services/            # API and utility services
+│   └── api.ts              # HTTP client and API calls
+├── types/               # TypeScript type definitions
+│   └── api.ts              # API response types
+└── theme/               # Design system
+    └── colors.ts           # Color palette and typography
 ```
 
-## How It Makes You Lazier
+## API Integration
 
-| Before This App               | With This App            |
-| ----------------------------- | ------------------------ |
-| Get up to adjust volume       | Adjust from your phone   |
-| Walk to Mac to check battery  | Check from anywhere      |
-| Physically press sleep button | Tap sleep on your phone  |
-| Interrupt your viewing        | Stay immersed in content |
+The app connects to a local Mac server with the following endpoints:
 
-## Technical Features
+- `GET /status` - Server health check
+- `GET /info` - System information (battery, CPU, memory)
+- `GET /volume` - Current volume level
+- `POST /volume` - Set volume level
+- `GET /brightness` - Current brightness level
+- `POST /brightness` - Set brightness level
+- `POST /action` - System actions (sleep, restart, shutdown)
 
-- **React Native + TypeScript** - Production-ready code
-- **Real-time polling** - Updates every 2 seconds
-- **Error handling** - Automatic reconnection if server drops
-- **Accessibility** - Works with screen readers
-- **Responsive design** - Looks great on phones and tablets
+## Memory Graph Implementation
 
-## Platform Support
+The real-time memory graph:
 
-- **iOS**: Uses `http://localhost:5001`
-- **Android**: Uses `http://10.0.2.2:5001` (emulator localhost)
-- **Physical devices**: Use your computer's IP address
+- Polls `/info` endpoint every 2 seconds
+- Maintains a circular buffer of 60 samples (2 minutes of data)
+- Uses `react-native-svg` for rendering
+- Shows memory usage percentage and raw bytes
+- Pauses polling when app goes to background
 
-## Why You'll Love This
+## Development
 
-- 🕒 **Saves time** - No more getting up for small adjustments
-- 😌 **More comfortable** - Stay in your perfect spot
-- 🎯 **More precise** - Fine-tune controls with sliders
-- 📱 **Always available** - Your phone is always with you
+### Key Technologies
+
+- **React Native** with TypeScript
+- **React Query** for data fetching and caching
+- **React Native SVG** for charts and graphics
+- **React Native Scanner** for QR code scanning
+- **AsyncStorage** for local data persistence
+- **React Native Safe Area Context** for device-safe layouts
+
+### Code Quality
+
+- TypeScript for type safety
+- ESLint and Prettier for code formatting
+- React Query for efficient data management
+- Custom hooks for reusable logic
+- Component-based architecture
 
 ## Troubleshooting
 
-### Can't Connect to Server
+### Common Issues
 
-- Make sure the Node.js server is running
-- Check if both devices are on the same network
-- For Android emulator, use `10.0.2.2` instead of localhost
+1. **Server Connection Failed**
 
-### App Not Updating
+   - Ensure Mac server is running on port 5001
+   - Check if IP address is correct
+   - Verify both devices are on same network
 
-- Check if polling is active (green status badge)
-- Verify API responses contain expected data
+2. **QR Scanner Not Working**
 
-### Build Issues
+   - Grant camera permissions
+   - Ensure QR code contains valid IP address
+   - Try manual IP entry as fallback
 
-- Clear cache: `bun start --reset-cache`
-- Reinstall dependencies: `rm -rf node_modules && bun install`
+3. **Build Errors**
+   - Clear cache: `bun start --reset-cache`
+   - Reinstall dependencies: `bun install`
+   - Check React Native version compatibility
 
----
+## License
 
-_Stay comfortable. Stay lazy. Stay in control._
+MIT License - see LICENSE file for details

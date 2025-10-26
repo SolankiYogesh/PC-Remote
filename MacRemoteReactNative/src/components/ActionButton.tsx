@@ -20,19 +20,16 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
     switch (type) {
       case 'sleep':
         return {
-          icon: '🌙',
           label: 'Sleep',
           primaryColor: colors.accent.secondary,
         };
       case 'restart':
         return {
-          icon: '🔄',
           label: 'Restart',
           primaryColor: colors.accent.warning,
         };
       case 'shutdown':
         return {
-          icon: '⏻',
           label: 'Shutdown',
           primaryColor: colors.accent.error,
         };
@@ -45,7 +42,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
     }
   };
 
-  const { icon, label, primaryColor } = getButtonConfig();
+  const { label, primaryColor } = getButtonConfig();
 
   const handlePressIn = () => {
     Animated.parallel([
@@ -97,7 +94,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       <TouchableOpacity
         style={[
           styles.button,
-          { backgroundColor: primaryColor },
+          { borderColor: primaryColor },
           disabled && styles.disabled,
         ]}
         onPressIn={handlePressIn}
@@ -108,7 +105,6 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         accessibilityHint={`Perform ${label} action on the Mac`}
         accessibilityRole="button"
       >
-        <Text style={styles.icon}>{icon}</Text>
         <Text style={styles.label}>{label}</Text>
       </TouchableOpacity>
     </Animated.View>
@@ -118,7 +114,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 80,
+    minHeight: 55,
   },
   button: {
     flex: 1,
@@ -126,7 +122,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,
-    paddingVertical: spacing.lg,
     paddingHorizontal: spacing.md,
     borderRadius: borderRadius.xl,
     shadowColor: colors.shadow.medium,
@@ -136,7 +131,6 @@ const styles = StyleSheet.create({
     elevation: 8,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
-    // Subtle gradient effect using overlay
     position: 'relative',
     overflow: 'hidden',
   },

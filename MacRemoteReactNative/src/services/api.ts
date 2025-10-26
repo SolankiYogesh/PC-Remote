@@ -1,3 +1,4 @@
+import axios, { AxiosRequestConfig } from 'axios';
 import {
   SystemInfo,
   StatusResp,
@@ -6,35 +7,67 @@ import {
   ActionResp,
   ApiError,
 } from '../types/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Platform } from 'react-native';
+let BASE_URL: string | null = null;
 
-const BASE_URL =
-  Platform.OS === 'android' ? 'http://10.0.2.2:5001' : 'http://localhost:5001';
+export const setBaseUrl = async (newBaseUrl: string) => {
+  BASE_URL = newBaseUrl;
+
+  await AsyncStorage.setItem('serverIp', newBaseUrl);
+};
+
+export const getBaseUrl = async () => {
+  const baseUrl = await AsyncStorage.getItem('serverIp');
+
+  BASE_URL = baseUrl;
+  return baseUrl;
+};
+
+export const clearStoredIp = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem('serverIp');
+  } catch (error) {
+    console.error('Failed to clear stored IP:', error);
+  }
+};
 
 async function apiCall<T>(
   endpoint: string,
-  options: RequestInit = {},
+  options: AxiosRequestConfig = {},
 ): Promise<T> {
+  if (!BASE_URL) throw { message: 'BASE_URL is not set' } as ApiError;
+
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await axios.request<T>({
+      url: `${BASE_URL}${endpoint}`,
+      method: options.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      data: options.data,
+      params: options.params,
       ...options,
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('[API ERROR] Axios Error:', {
+        message: error.message,
+        url: `${BASE_URL}${endpoint}`,
+        method: options.method || 'GET',
+        status: error.response?.status,
+        responseData: error.response?.data,
+        headers: error.config?.headers,
+      });
+      throw {
+        message: error.response?.data?.message || error.message,
+      } as ApiError;
     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw { message: error.message } as ApiError;
-    }
+    console.error('[API ERROR] Unknown Error:', error);
     throw { message: 'Unknown network error' } as ApiError;
   }
 }
@@ -51,7 +84,7 @@ export const getVolume = (): Promise<{ volume: number }> =>
 export const setVolume = (volume: number): Promise<SuccessResp> =>
   apiCall<SuccessResp>('/volume', {
     method: 'POST',
-    body: JSON.stringify({ volume }),
+    data: { volume },
   });
 
 export const getBrightness = (): Promise<{ brightness: number }> =>
@@ -60,13 +93,13 @@ export const getBrightness = (): Promise<{ brightness: number }> =>
 export const setBrightness = (brightness: number): Promise<SuccessResp> =>
   apiCall<SuccessResp>('/brightness', {
     method: 'POST',
-    body: JSON.stringify({ brightness }),
+    data: { brightness }, // changed from 'body' to 'data'
   });
 
 export const performAction = (action: ActionReq['type']): Promise<ActionResp> =>
   apiCall<ActionResp>('/action', {
     method: 'POST',
-    body: JSON.stringify({ type: action }),
+    data: { type: action },
   });
 
 export const formatBytes = (bytes: number): string => {

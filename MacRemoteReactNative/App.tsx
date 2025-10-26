@@ -7,17 +7,24 @@ import {
   Alert,
   StatusBar,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { StatusBadge } from './src/components/StatusBadge';
 import { SystemOverview } from './src/components/SystemOverview';
 import { ControlsPanel } from './src/components/ControlsPanel';
 import { OfflineState } from './src/components/OfflineState';
+
+import { IpScanner } from './src/components/IpScanner';
 
 import {
   useStatus,
@@ -28,13 +35,17 @@ import {
   useSetBrightness,
   usePerformAction,
 } from './src/hooks/useApi';
-import { calculateMemoryPercentage } from './src/services/api';
+import {
+  calculateMemoryPercentage,
+  setBaseUrl,
+  clearStoredIp,
+  getBaseUrl,
+} from './src/services/api';
 import { MemorySample } from './src/types/api';
 import { colors, typography, spacing, borderRadius } from './src/theme/colors';
 
 const { width: screenWidth } = Dimensions.get('window');
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -50,6 +61,16 @@ function AppContent() {
   const [memorySamples, setMemorySamples] = useState<MemorySample[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [apiResponseTimes, setApiResponseTimes] = useState<number[]>([]);
+  const client = useQueryClient();
+  const [isLoadingUrl, setIsLoadingUrl] = useState<{
+    url: null | string;
+    loading: boolean;
+  }>({
+    url: null,
+    loading: true,
+  });
+
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const {
     data: statusData,
@@ -66,6 +87,68 @@ function AppContent() {
 
   const isOnline = !!statusData?.ok;
   const isLoading = !statusData && !statusError;
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const storedIp = await getBaseUrl();
+
+        setTimeout(() => {
+          setIsLoadingUrl({
+            loading: false,
+            url: storedIp,
+          });
+        }, 2000);
+        if (storedIp) {
+          client.invalidateQueries();
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_: any) {
+        setTimeout(() => {
+          setIsLoadingUrl({
+            loading: false,
+            url: null,
+          });
+        }, 2000);
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+
+    initializeApp();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Handle server errors by clearing IP and showing scanner
+  useEffect(() => {
+    if (statusError && !isInitializing) {
+      const errorMessage = (statusError as { message: string }).message;
+      if (
+        errorMessage.includes('Network request failed') ||
+        errorMessage.includes('Failed to fetch') ||
+        errorMessage.includes('ECONNREFUSED')
+      ) {
+        clearStoredIp();
+        setIsLoadingUrl({
+          loading: false,
+          url: null,
+        });
+      }
+    }
+  }, [statusError, isInitializing]);
+
+  const handleIpDetected = useCallback(
+    (newBaseUrl: string) => {
+      setBaseUrl(newBaseUrl);
+
+      client.invalidateQueries();
+      setIsLoadingUrl({
+        loading: false,
+        url: newBaseUrl,
+      });
+    },
+    [client],
+  );
 
   const handleVolumeChange = useCallback(
     (newVolume: number) => {
@@ -175,14 +258,20 @@ function AppContent() {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Mac Remote</Text>
         </View>
-        <StatusBadge
-          isOnline={isOnline}
-          isLoading={isLoading}
-          onRetry={handleRetry}
-        />
+        <View style={styles.headerActions}>
+          <StatusBadge
+            isOnline={isOnline}
+            isLoading={isLoading}
+            onRetry={handleRetry}
+          />
+        </View>
       </View>
 
-      {isOnline ? (
+      {isLoadingUrl.loading ? (
+        <ActivityIndicator style={styles.titleContainer} />
+      ) : !isLoadingUrl.url ? (
+        <IpScanner onIpDetected={handleIpDetected} />
+      ) : isOnline ? (
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -262,6 +351,21 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     fontWeight: typography.weight.bold,
     marginBottom: spacing.xs,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  settingsButton: {
+    backgroundColor: colors.background.glass,
+    borderRadius: borderRadius.lg,
+    padding: spacing.sm,
+    borderWidth: 1,
+    borderColor: colors.border.light,
+  },
+  settingsButtonText: {
+    fontSize: typography.size.lg,
   },
 
   errorBanner: {

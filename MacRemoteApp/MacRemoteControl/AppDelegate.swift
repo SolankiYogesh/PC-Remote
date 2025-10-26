@@ -146,6 +146,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     let name = String(cString: interface.ifa_name)
                     if name != "lo0" { // skip loopback
                         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                        
                         getnameinfo(addr,
                                     socklen_t(addr.pointee.sa_len),
                                     &hostname,

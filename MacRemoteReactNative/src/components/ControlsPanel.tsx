@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   actionsRow: {
-    flexDirection: 'row',
     gap: spacing.md,
   },
 });
