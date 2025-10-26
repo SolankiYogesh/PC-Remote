@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Identity -->
+    <key>CFBundleName</key>
+    <string>MacRemoteControl</string>
+    <key>CFBundleDisplayName</key>
+    <string>MacRemoteControl</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.yourname.macremotecontrol</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+
+    <!-- App Type: Menu Bar only, hide Dock -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- Permissions -->
+    <key>NSAppleEventsUsageDescription</key>
+    <string>This app requires Apple Events access to control your Mac for volume, brightness, and sleep actions.</string>
+
+    <key>NSSystemAdministrationUsageDescription</key>
+    <string>This app requires administrative privileges to perform sleep, restart, and shutdown actions.</string>
+
+    <key>NSAccessibilityUsageDescription</key>
+    <string>This app requires Accessibility permission to control volume, brightness, and system actions.</string>
+
+    <!-- App Category -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.utilities</string>
+
+    <!-- Icon -->
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+
+    <!-- Minimum macOS Version -->
+    <key>LSMinimumSystemVersion</key>
+    <string>10.15</string>
+</dict>
+</plist>

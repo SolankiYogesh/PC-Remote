@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   App.plist
+   MacRemoteControl
+
+   Created by Yogesh Solanki on 26/10/25.
+   Copyright (c) 2025 ___ORGANIZATIONNAME___. All rights reserved.
+-->
+<plist version="1.0">
+<dict>
+    <!-- Disable App Sandbox to allow Node.js execution -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+    
+    <!-- OR if you want to keep sandboxing, enable these: -->
+    <!-- 
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+    
+    <key>com.apple.security.network.client</key>
+    <true/>
+    
+    <key>com.apple.security.network.server</key>
+    <true/>
+    
+    <key>com.apple.security.temporary-exception.unix-socket</key>
+    <true/>
+    -->
+    
+    <!-- Allow executing external processes like Node.js -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>

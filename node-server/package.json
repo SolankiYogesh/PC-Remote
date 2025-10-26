@@ -1,0 +1,29 @@
+{
+  "name": "mac-remote-server",
+  "version": "1.0.0",
+  "description": "Node.js server for controlling Mac settings (volume, brightness, sleep, restart, shutdown)",
+  "main": "server.js",
+  "bin": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npx pkg server.cjs --targets node18-macos-x64 --output MacRemoteServer"
+  },
+  "keywords": [
+    "mac",
+    "control",
+    "volume",
+    "brightness",
+    "nodejs",
+    "server"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "brightness": "^3.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "loudness": "^0.4.2",
+    "systeminformation": "^5.27.11"
+  }
+}
