@@ -17,6 +17,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StatusBadge } from './src/components/StatusBadge';
 import { SystemOverview } from './src/components/SystemOverview';
 import { ControlsPanel } from './src/components/ControlsPanel';
+import { OfflineState } from './src/components/OfflineState';
 
 import {
   useStatus,
@@ -50,7 +51,6 @@ function AppContent() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [apiResponseTimes, setApiResponseTimes] = useState<number[]>([]);
 
-  // React Query hooks
   const {
     data: statusData,
     error: statusError,
@@ -182,48 +182,52 @@ function AppContent() {
         />
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View
-          style={[
-            styles.content,
-            isWideScreen ? styles.wideLayout : styles.narrowLayout,
-          ]}
+      {isOnline ? (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.column, isWideScreen && styles.leftColumn]}>
-            <SystemOverview
-              systemInfo={systemInfo || null}
-              memorySamples={memorySamples}
-            />
+          <View
+            style={[
+              styles.content,
+              isWideScreen ? styles.wideLayout : styles.narrowLayout,
+            ]}
+          >
+            <View style={[styles.column, isWideScreen && styles.leftColumn]}>
+              <SystemOverview
+                systemInfo={systemInfo || null}
+                memorySamples={memorySamples}
+              />
+            </View>
+
+            <View style={[styles.column, isWideScreen && styles.rightColumn]}>
+              <ControlsPanel
+                isOnline={isOnline}
+                volume={volumeData?.volume || 50}
+                brightness={brightnessData?.brightness || 0.5}
+                onVolumeChange={handleVolumeChange}
+                onBrightnessChange={handleBrightnessChange}
+                onAction={handleAction}
+              />
+            </View>
           </View>
 
-          <View style={[styles.column, isWideScreen && styles.rightColumn]}>
-            <ControlsPanel
-              isOnline={isOnline}
-              volume={volumeData?.volume || 50}
-              brightness={brightnessData?.brightness || 0.5}
-              onVolumeChange={handleVolumeChange}
-              onBrightnessChange={handleBrightnessChange}
-              onAction={handleAction}
-            />
+          <View style={styles.footer}>
+            <View style={styles.footerContent}>
+              <Text style={styles.footerText}>
+                Last updated:{' '}
+                {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
+              </Text>
+              <Text style={styles.footerText}>
+                Avg response: {averageResponseTime}ms
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.footer}>
-          <View style={styles.footerContent}>
-            <Text style={styles.footerText}>
-              Last updated:{' '}
-              {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Never'}
-            </Text>
-            <Text style={styles.footerText}>
-              Avg response: {averageResponseTime}ms
-            </Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <OfflineState onRetry={handleRetry} isLoading={isLoading} />
+      )}
     </View>
   );
 }
