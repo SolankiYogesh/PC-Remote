@@ -16,18 +16,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var toggle = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Load and resize icons
         icon1 = resizeImage(named: "iconTemplate", width: 22, height: 22)
         icon2 = resizeImage(named: "iconActive", width: 22, height: 22)
         
         icon1?.isTemplate = false
         icon2?.isTemplate = false
 
-        // Create menu bar item
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusBarItem?.button?.image = icon1
 
-        // Build menu
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Restart Server", action: #selector(restartServer), keyEquivalent: "r"))
         menu.addItem(NSMenuItem(title: "Permissions", action: #selector(checkPermissions), keyEquivalent: "p"))
@@ -35,15 +32,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
         statusBarItem?.menu = menu
 
-        // Start Node.js server
         nodeManager = NodeServerManager()
         nodeManager?.startServer()
-
-        // Start animated icon toggle
         startIconAnimation()
     }
 
-    // MARK: - Icon Animation
     func startIconAnimation() {
         timer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -57,7 +50,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         timer = nil
     }
 
-    // MARK: - Node Server Actions
     @objc func restartServer() {
         nodeManager?.restartServer()
     }
@@ -72,7 +64,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.terminate(nil)
     }
 
-    // MARK: - Helper: Resize Image
     private func resizeImage(named name: String, width: CGFloat, height: CGFloat) -> NSImage? {
         guard let image = NSImage(named: name) else { return nil }
         let newImage = NSImage(size: NSSize(width: width, height: height))
