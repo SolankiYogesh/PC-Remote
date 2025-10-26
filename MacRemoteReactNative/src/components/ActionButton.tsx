@@ -22,39 +22,40 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         return {
           icon: '🌙',
           label: 'Sleep',
-          color: colors.accent.secondary,
+          primaryColor: colors.accent.secondary,
         };
       case 'restart':
         return {
           icon: '🔄',
           label: 'Restart',
-          color: colors.accent.warning,
+          primaryColor: colors.accent.warning,
         };
       case 'shutdown':
         return {
           icon: '⏻',
           label: 'Shutdown',
-          color: colors.accent.error,
+          primaryColor: colors.accent.error,
         };
       default:
         return {
           icon: '❓',
           label: 'Unknown',
-          color: colors.accent.primary,
+          primaryColor: colors.accent.primary,
         };
     }
   };
 
-  const { icon, label, color } = getButtonConfig();
+  const { icon, label, primaryColor } = getButtonConfig();
 
   const handlePressIn = () => {
     Animated.parallel([
       Animated.spring(scaleAnim, {
-        toValue: 0.95,
+        toValue: 0.92,
         useNativeDriver: true,
+        speed: 20,
       }),
       Animated.spring(opacityAnim, {
-        toValue: 0.8,
+        toValue: 0.85,
         useNativeDriver: true,
       }),
     ]).start();
@@ -65,6 +66,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       Animated.spring(scaleAnim, {
         toValue: 1,
         useNativeDriver: true,
+        speed: 20,
       }),
       Animated.spring(opacityAnim, {
         toValue: 1,
@@ -95,7 +97,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       <TouchableOpacity
         style={[
           styles.button,
-          { backgroundColor: color },
+          { backgroundColor: primaryColor },
           disabled && styles.disabled,
         ]}
         onPressIn={handlePressIn}
@@ -116,31 +118,46 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: 80,
   },
   button: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.lg,
+    gap: spacing.xs,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    borderRadius: borderRadius.xl,
     shadowColor: colors.shadow.medium,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    // Subtle gradient effect using overlay
+    position: 'relative',
+    overflow: 'hidden',
   },
   icon: {
-    fontSize: typography.size.xl,
+    fontSize: typography.size['2xl'],
+    marginBottom: spacing.xs,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   label: {
-    fontSize: typography.size.base,
+    fontSize: typography.size.sm,
     color: colors.text.primary,
-    fontWeight: typography.weight.semibold,
+    fontWeight: typography.weight.bold,
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    letterSpacing: 0.5,
   },
   disabled: {
-    opacity: 0.5,
+    opacity: 0.4,
+    shadowOpacity: 0.2,
   },
 });

@@ -39,33 +39,35 @@ async function apiCall<T>(
   }
 }
 
-export const apiService = {
-  getStatus: (): Promise<StatusResp> => apiCall<StatusResp>('/status'),
+export const getStatus = (): Promise<StatusResp> =>
+  apiCall<StatusResp>('/status');
 
-  getInfo: (): Promise<SystemInfo> => apiCall<SystemInfo>('/info'),
+export const getSystemInfo = (): Promise<SystemInfo> =>
+  apiCall<SystemInfo>('/info');
 
-  getVolume: (): Promise<{ volume: number }> =>
-    apiCall<{ volume: number }>('/volume'),
-  setVolume: (volume: number): Promise<SuccessResp> =>
-    apiCall<SuccessResp>('/volume', {
-      method: 'POST',
-      body: JSON.stringify({ volume }),
-    }),
+export const getVolume = (): Promise<{ volume: number }> =>
+  apiCall<{ volume: number }>('/volume');
 
-  getBrightness: (): Promise<{ brightness: number }> =>
-    apiCall<{ brightness: number }>('/brightness'),
-  setBrightness: (brightness: number): Promise<SuccessResp> =>
-    apiCall<SuccessResp>('/brightness', {
-      method: 'POST',
-      body: JSON.stringify({ brightness }),
-    }),
+export const setVolume = (volume: number): Promise<SuccessResp> =>
+  apiCall<SuccessResp>('/volume', {
+    method: 'POST',
+    body: JSON.stringify({ volume }),
+  });
 
-  performAction: (action: ActionReq['type']): Promise<ActionResp> =>
-    apiCall<ActionResp>('/action', {
-      method: 'POST',
-      body: JSON.stringify({ type: action }),
-    }),
-};
+export const getBrightness = (): Promise<{ brightness: number }> =>
+  apiCall<{ brightness: number }>('/brightness');
+
+export const setBrightness = (brightness: number): Promise<SuccessResp> =>
+  apiCall<SuccessResp>('/brightness', {
+    method: 'POST',
+    body: JSON.stringify({ brightness }),
+  });
+
+export const performAction = (action: ActionReq['type']): Promise<ActionResp> =>
+  apiCall<ActionResp>('/action', {
+    method: 'POST',
+    body: JSON.stringify({ type: action }),
+  });
 
 export const formatBytes = (bytes: number): string => {
   if (bytes === 0) return '0 B';

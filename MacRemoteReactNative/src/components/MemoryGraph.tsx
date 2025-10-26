@@ -14,7 +14,7 @@ const { width: screenWidth } = Dimensions.get('window');
 
 export const MemoryGraph: React.FC<MemoryGraphProps> = ({
   data,
-  width = screenWidth - spacing.xl * 2,
+  width = screenWidth - spacing.xl * 3,
   height = 120,
 }) => {
   if (data.length === 0) {
@@ -25,17 +25,14 @@ export const MemoryGraph: React.FC<MemoryGraphProps> = ({
     );
   }
 
-  // Calculate graph dimensions
   const padding = spacing.md;
   const graphWidth = width - padding * 2;
   const graphHeight = height - padding * 2;
 
-  // Find min and max values for scaling
   const maxMemory = Math.max(...data.map(d => d.percent));
   const minMemory = Math.min(...data.map(d => d.percent));
-  const range = Math.max(maxMemory - minMemory, 10); // Ensure minimum range
+  const range = Math.max(maxMemory - minMemory, 10);
 
-  // Generate path data for the line
   const generatePath = () => {
     if (data.length < 2) return '';
 
