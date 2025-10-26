@@ -1,97 +1,117 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Mac Remote Control - Mobile App
 
-# Getting Started
+> **Your Laziness, Now Mobile** 📱
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+A beautiful React Native mobile app that turns your phone into the ultimate remote control for your Mac. Perfect for those moments when getting up feels like too much work.
 
-## Step 1: Start Metro
+## Why This Exists
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Because reaching for your Mac to adjust volume, change brightness, or put it to sleep interrupts your comfortable Netflix, Jio Hotstar, or YouTube binge. This app lets you control everything from your phone while staying perfectly lazy.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Features That Keep You Lazy
 
-```sh
-# Using npm
-npm start
+### 🎚️ One-Handed Volume Control
 
-# OR using Yarn
-yarn start
+- Smooth sliders for precise volume adjustment
+- Perfect for loud commercials or quiet scenes
+- No need to pause your show
+
+### 💡 Brightness at Your Fingertips
+
+- Adjust screen brightness without leaving your spot
+- Great for changing room lighting conditions
+- Keep your viewing experience comfortable
+
+### 📊 Real-Time System Monitoring
+
+- Battery status so you know when to plug in
+- CPU and memory usage for performance geeks
+- All the info you need without interrupting your flow
+
+### ⚡ Quick Actions
+
+- **Sleep** - Put your Mac to bed from your bed
+- **Restart** - Quick system refresh when needed
+- **Shutdown** - Power down without moving
+
+### 🎨 Beautiful Dark Theme
+
+- Optimized for low-light viewing
+- Easy on the eyes during movie nights
+- Professional design that just works
+
+## Perfect For
+
+- 🛋️ **Couch potatoes** - Control everything without standing up
+- 🎬 **Movie nights** - Be the remote master from your seat
+- 🎵 **Music sessions** - Fine-tune volume from anywhere
+- 💻 **Work from bed** - All the controls you need
+- 🎮 **Gaming setups** - Quick adjustments between matches
+
+## Quick Start
+
+```bash
+# Install dependencies
+bun install
+
+# Start development server
+bun start
+
+# Run on iOS
+bun ios
+
+# Run on Android
+bun android
 ```
 
-## Step 2: Build and run your app
+## How It Makes You Lazier
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+| Before This App               | With This App            |
+| ----------------------------- | ------------------------ |
+| Get up to adjust volume       | Adjust from your phone   |
+| Walk to Mac to check battery  | Check from anywhere      |
+| Physically press sleep button | Tap sleep on your phone  |
+| Interrupt your viewing        | Stay immersed in content |
 
-### Android
+## Technical Features
 
-```sh
-# Using npm
-npm run android
+- **React Native + TypeScript** - Production-ready code
+- **Real-time polling** - Updates every 2 seconds
+- **Error handling** - Automatic reconnection if server drops
+- **Accessibility** - Works with screen readers
+- **Responsive design** - Looks great on phones and tablets
 
-# OR using Yarn
-yarn android
-```
+## Platform Support
 
-### iOS
+- **iOS**: Uses `http://localhost:5001`
+- **Android**: Uses `http://10.0.2.2:5001` (emulator localhost)
+- **Physical devices**: Use your computer's IP address
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## Why You'll Love This
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+- 🕒 **Saves time** - No more getting up for small adjustments
+- 😌 **More comfortable** - Stay in your perfect spot
+- 🎯 **More precise** - Fine-tune controls with sliders
+- 📱 **Always available** - Your phone is always with you
 
-```sh
-bundle install
-```
+## Troubleshooting
 
-Then, and every time you update your native dependencies, run:
+### Can't Connect to Server
 
-```sh
-bundle exec pod install
-```
+- Make sure the Node.js server is running
+- Check if both devices are on the same network
+- For Android emulator, use `10.0.2.2` instead of localhost
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### App Not Updating
 
-```sh
-# Using npm
-npm run ios
+- Check if polling is active (green status badge)
+- Verify API responses contain expected data
 
-# OR using Yarn
-yarn ios
-```
+### Build Issues
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- Clear cache: `bun start --reset-cache`
+- Reinstall dependencies: `rm -rf node_modules && bun install`
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+---
 
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+_Stay comfortable. Stay lazy. Stay in control._
